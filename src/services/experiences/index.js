@@ -1,25 +1,36 @@
-import mongoose from "mongoose";
 import express from "express";
-import createHttpError from "http-errors";
-import q2m from "query-to-mongo";
-import ExperienceSchema from "../experiences/schema.js";
+import Experiences from "./handlers.js";
 
 const experiencesRouter = express.Router();
 
+// ****************** GET ALL EXPERIENCES ********************
+experiencesRouter.get("/:userName/experiences", Experiences.getAll);
+
+
 // ****************** CREATE NEW EXPERIENCE ******************
-experiencesRouter.post("/:userName/experiences", async (req, res, next) => {
-  try {
-      const newExperience = new ExperienceSchema({
-        ...req.body,
-        userName: req.params.userName
-      });
-      const { _id } = await newExperience.save();
+experiencesRouter.post("/:userName/experiences", Experiences.newExperience);
 
-      res.status(201).send({_id});
 
-  } catch (error) {
-    next(createHttpError(500, "An error ocurred while creating a new experience"));
-  }
-});
+// ****************** CSV FILE OF EXPERIENCES ****************
+experiencesRouter.get("/:userName/experiences/CSV", Experiences.toCSV)
+
+
+// ****************** GET EXPERIENCE BY ID *******************
+experiencesRouter.get("/:userName/experiences/:expId", Experiences.getById);
+
+
+// ****************** UPDATE EXPERIENCE BY ID ****************
+experiencesRouter.put("/:userName/experiences/:expId", 
+Experiences.updateExperience);
+
+
+// ****************** DELETE EXPERIENCE BY ID ****************
+experiencesRouter.delete("/:userName/experiences/:expId", 
+Experiences.deleteExperience);
+
+
+// ****************** UPDATE EXPERIENCE IMAGE ****************
+//experiencesRouter.post("/:userName/experiences/:expId/picture")
+
 
 export default experiencesRouter;
