@@ -4,9 +4,13 @@ const { Schema, model } = mongoose;
 
 const PostSchema = new Schema({
   text: { type: String, required: true },
+  username: {
+    type: String,
+    required: [true, "Please add the name of user"],
+  },
   user: {
     type: Schema.Types.ObjectId,
-    required: true,
+    required: [true, "Please add the id of user"],
     ref: "Profile",
   },
   image: {
@@ -15,8 +19,7 @@ const PostSchema = new Schema({
     default: `https://i1.wp.com/suiteplugins.com/wp-content/uploads/2019/10/blank-avatar.jpg?fit=800%2C800&ssl=1`,
   },
   comments: [],
-  likedBy: [],
+  likes: [{ type: Schema.Types.ObjectId, ref: "profile" }],
 });
-
 
 export default model("Post", PostSchema);
