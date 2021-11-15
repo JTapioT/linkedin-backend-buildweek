@@ -26,4 +26,5 @@ postsRouter.post("/", async (req, res, next) => {
         next(createHttpError(500, "Error occurred while creating new post"));
     }
 })
+
 export default postsRouter;
