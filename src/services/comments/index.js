@@ -23,7 +23,7 @@ commentsRouter.post("/:postId/post", async (req, res, next) => {
     }
   } catch (error) {
     console.log(error);
-    if (error.name === "validationError") {
+    if (error.name === "ValidationError") {
       next(createError(400, error));
     } else {
       console.log(error);
@@ -31,5 +31,28 @@ commentsRouter.post("/:postId/post", async (req, res, next) => {
     }
   }
 });
+
+
+
+// **************** GET SINGLE COMMENT ****************
+commentsRouter.get('/:commentId', async (req, res, next) => {
+    try {
+
+        const commentId = req.params.commentId
+        const comment = await CommentSchema.findById(commentId)
+        if (comment) {
+            res.status(200).send(comment)
+        } else {
+            next(createError(404, `comment with id ${commentId} was not found`))
+        }
+    } catch (error) {
+        if (error.name === "ValidationError") {
+            next(createError(400, error))
+        } else {
+            console.log(error)
+            next(createError(500, "An Error ocurred while creating your comment"))
+        }
+    }
+})
 
 export default commentsRouter;
