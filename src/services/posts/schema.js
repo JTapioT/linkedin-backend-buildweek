@@ -14,9 +14,9 @@ const PostSchema = new Schema({
     required: false,
     default: `https://i1.wp.com/suiteplugins.com/wp-content/uploads/2019/10/blank-avatar.jpg?fit=800%2C800&ssl=1`,
   },
+
   comments: [],
   likedBy: [],
 });
-
 
 export default model("Post", PostSchema);
