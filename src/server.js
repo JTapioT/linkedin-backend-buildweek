@@ -12,7 +12,7 @@ server.use(express.json());
 const PORT = process.env.PORT || 3005;
 
 
-mongoose.connect(process.env.MONGODB_URI);
+mongoose.connect(process.env.MONGODB_URI); // Of course, locally feel free to change the environment variable as you want.
 mongoose.connection.on("connected", () => {
 server.listen(PORT, () => {
 console.table(listEndpoints(server));
