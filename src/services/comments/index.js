@@ -34,7 +34,6 @@ commentsRouter.post("/:postId/post", async (req, res, next) => {
 
 // **************** GET ALL COMMENTS ****************
 commentsRouter.get("/:postId/comments", async (req, res, next) => {
-  //get all comment
   try {
     const postId = req.params.postId;
     const comments = await PostSchema.findById(postId);
