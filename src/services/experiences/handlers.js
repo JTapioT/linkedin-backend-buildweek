@@ -44,17 +44,16 @@ async function getAll(req, res, next) {
 // ******* USER EXPERIENCE CSV *****
 async function toCSV(req,res,next) {
   try {
-    // TODO: Maybe later add dynamically the username, eg. JohnDoeExperiences.csv
     // TODO: Find out later if one can omit _id from csv fields. Now it does not return _id within single document but will write _id to first row.
-
-    res.setHeader("Content-Disposition", "attachment; filename=userExperiences.csv")
-
+    
+    res.setHeader("Content-Disposition", `attachment; filename=${req.params.userName}Experiences.csv`)
+    
     ExperienceSchema.find({userName: req.params.userName},{
-      _id: false, 
-      createdAt: 0, 
-      updatedAt: 0,
+        _id: false, 
+        createdAt: 0, 
+        updatedAt: 0,
     }).csv(res);
-
+  
   } catch (error) {
     console.log(error);
     next(error);
@@ -92,6 +91,26 @@ async function newExperience(req, res, next) {
     const {_id} = await newExperience.save();
 
     res.status(201).send({_id});
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+}
+
+// ****** POST IMG FOR EXPERIENCE ***
+async function updateImage(req,res,next) {
+  try {
+
+    const editedExperience = await ExperienceSchema.findByIdAndUpdate(
+      {_id: req.params.expId},
+      {image: req.file.path},
+      {new: true});
+
+    if(editedExperience) {
+      res.send({message: "Image updated successfully."});
+    } else {
+      next(createHttpError(404, `No experience found with id: ${req.params.expId}`))
+    }
   } catch (error) {
     console.log(error);
     next(error);
