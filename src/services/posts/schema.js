@@ -19,7 +19,7 @@ const PostSchema = new Schema({
     default: `https://i1.wp.com/suiteplugins.com/wp-content/uploads/2019/10/blank-avatar.jpg?fit=800%2C800&ssl=1`,
   },
   comments: [],
-  likes: [{ type: Schema.Types.ObjectId, ref: "profile" }],
+  likes: [{ type: Schema.Types.ObjectId, ref: "Profile" }],
 });
 
 export default model("Post", PostSchema);
