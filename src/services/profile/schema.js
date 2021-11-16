@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import validation from "validator";
+import bcrypt from "bcrypt";
 
 const { Schema, model } = mongoose;
 
@@ -43,6 +44,24 @@ const ProfileSchema = new Schema(
         },
       },
     },
+    username: {
+      type: String,
+      required: true,
+      validate: {
+        validator: async (value) => {
+          const checkUsername = await ProfileModel.findOne({ username: value });
+          if (checkUsername) {
+            throw new Error("Username already exists!");
+          }
+        },
+      },
+    },
+    password: {
+      type: String,
+    },
+    token: {
+      type: String,
+    },
     bio: { type: String, required: true },
     title: { type: String, required: true },
     area: { type: String, required: true },
@@ -62,14 +81,46 @@ const ProfileSchema = new Schema(
   }
 );
 
+// Function to update the default avatar with dynamic initials from names
 ProfileSchema.pre("findOneAndUpdate", async function (next) {
-    const modelToUpdate = await this.model.findOne(this.getFilter())
-    if (modelToUpdate?.image.includes("eu.ui-avatars.com")) {
-      this.set({
-        image: `https://eu.ui-avatars.com/api/?name=${modelToUpdate.name}+${modelToUpdate.surname}`,
-      })
-    }
-    next()
-  })
+  const modelToUpdate = await this.model.findOne(this.getFilter());
+  if (modelToUpdate?.image.includes("eu.ui-avatars.com")) {
+    this.set({
+      image: `https://eu.ui-avatars.com/api/?name=${modelToUpdate.name}+${modelToUpdate.surname}`,
+    });
+  }
+  next();
+});
+
+// Function to check for credentials if they match and compare passwords loading hash from our passwordDB
+ProfileSchema.statics.findByCredentials = async (credentials, password) => {
+  // we can use email or username to login and we store this as credentials
+  const user = await ProfileSchema.findOne({
+    $or: [{ username: credentials }, { email: credentials }],
+  });
+
+  if (!user) {
+    const error = new Error("Username or Password do not match!");
+    error.httpStatusCode = 404;
+    throw error;
+  }
+
+  const match = await bcrypt.compare(password, user.password);
+  if (!match) {
+    const error = new Error("Login Failed");
+    error.httpStatusCode = 401;
+    throw error;
+  } else {
+    return user;
+  }
+};
+
+ProfileSchema.pre("save", async function (next) {
+  const user = this;
+  if (user.isModified("password")) {
+    user.password = await bcrypt.hash(user.password, 10);
+  }
+  next();
+});
 
 export default model("Profile", ProfileSchema);
