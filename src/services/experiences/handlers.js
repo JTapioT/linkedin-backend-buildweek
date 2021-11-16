@@ -5,6 +5,10 @@ import ExperienceSchema from "../experiences/schema.js";
 
 
 // ******** USER EXPERIENCES **********
+/**
+ * 
+ * Maybe reconsider if mongoQuery is overkill to implement here?
+ */
 async function getAll(req, res, next) {
   try {
     const mongoQuery = q2m(req.query);
@@ -148,5 +152,5 @@ async function deleteExperience(req, res, next) {
 }
 
 export default {
-  getAll, toCSV, getById, newExperience, updateExperience, deleteExperience
+  getAll, toCSV, getById, newExperience, updateExperience, updateImage, deleteExperience
 }
