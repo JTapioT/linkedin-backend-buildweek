@@ -1,5 +1,5 @@
 import express from "express";
-import dotenv from "dotenv";
+//import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
 import listEndpoints from "express-list-endpoints";
@@ -16,7 +16,7 @@ import commentsRouter from "../src/services/comments/index.js";
 import likesRouter from "../src/services/likes/index.js";
 
 
-dotenv.config();
+//dotenv.config();
 
 // ************ MIDDLEWARES *********************
 const server = express();
