@@ -131,6 +131,7 @@ postsRouter.delete("/:postId", async (req, res, next) => {
     } else {
       next(createHttpError(404, `post with this id ${id} not found`));
     }
+})
     await post.save();
     res.status(201).send(post);
   } catch (error) {
