@@ -48,7 +48,7 @@ export function uploadExperiencePicture(req,res,next) {
   });
 }
 
-export function uploadProfilePicture(req,res,next) {
+export function uploadPostPicture(req,res,next) {
   const upload = multer({ storage: cloudinaryPostStorage })
   .single("post");
   upload(req, res, (err) => {

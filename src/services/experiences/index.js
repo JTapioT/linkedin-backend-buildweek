@@ -1,6 +1,6 @@
 import express from "express";
 import Experiences from "./handlers.js";
-import uploadExperiencePicture from "../../utils/imageUpload.js";
+
 
 const experiencesRouter = express.Router();
 
@@ -31,7 +31,7 @@ Experiences.deleteExperience);
 
 
 // ****************** UPDATE EXPERIENCE IMAGE ****************
-experiencesRouter.post("/:userName/experiences/:expId/picture", uploadExperiencePicture, Experiences.updateImage)
+//experiencesRouter.post("/:userName/experiences/:expId/picture", uploadExperiencePicture, Experiences.updateImage)
 
 
 export default experiencesRouter;
