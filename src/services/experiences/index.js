@@ -1,5 +1,6 @@
 import express from "express";
 import Experiences from "./handlers.js";
+import uploadExperiencePicture from "../../utils/imageUpload.js";
 
 const experiencesRouter = express.Router();
 
@@ -30,7 +31,7 @@ Experiences.deleteExperience);
 
 
 // ****************** UPDATE EXPERIENCE IMAGE ****************
-//experiencesRouter.post("/:userName/experiences/:expId/picture")
+experiencesRouter.post("/:userName/experiences/:expId/picture", uploadExperiencePicture, Experiences.updateImage)
 
 
 export default experiencesRouter;
@@ -38,12 +39,18 @@ export default experiencesRouter;
 /*
 
 Include later (below) to profilesRouter and delete this below from server.js:
+server.use("/profile", experiencesRouter) 
+I think that use of:
+server.use("/profile", profilesRouter)
+server.use("/profile", experiencesRouter)
+Does not make sense as the both share the same "root", "/profile"
+
 
 profilesRouter.route("/:userName/experiences")
 .get(Experiences.getAll)
 .post(Experiences.newExperience);
 
-profilesRouter.route(":/userName/experiences/CSV")
+profilesRouter.route("/:userName/experiences/CSV")
 .get(Experiences.toCSV)
 
 profilesRouter.route("/:userName/experiences/:expId")
