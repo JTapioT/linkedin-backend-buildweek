@@ -38,12 +38,6 @@ export default experiencesRouter;
 /*
 
 Include later (below) to profilesRouter and delete this below from server.js:
-server.use("/profile", experiencesRouter) 
-I think that use of:
-server.use("/profile", profilesRouter)
-server.use("/profile", experiencesRouter)
-Does not make sense as the both share the same "root", "/profile"
-
 
 profilesRouter.route("/:userName/experiences")
 .get(Experiences.getAll)
