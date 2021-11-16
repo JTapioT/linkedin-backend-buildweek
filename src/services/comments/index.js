@@ -1,9 +1,10 @@
-import express, { Router } from "express";
+import express from "express";
+import mongoose from "mongoose";
 import createError from "http-errors";
 import CommentSchema from "../comments/schema.js";
 import PostSchema from "../posts/schema.js";
 
-const commentsRouter = Router();
+const commentsRouter = express.Router();
 
 // **************** POST A NEW COMMENT ****************
 commentsRouter.post("/:postId/post", async (req, res, next) => {

@@ -13,6 +13,7 @@ import profilesRouter from "../src/services/profile/index.js";
 import postsRouter from "../src/services/posts/index.js";
 import experiencesRouter from "../src/services/experiences/index.js"
 import commentsRouter from "../src/services/comments/index.js";
+import likesRouter from "../src/services/likes/index.js";
 
 
 dotenv.config();
@@ -28,6 +29,7 @@ const PORT = process.env.PORT || 3005;
 server.use("/profile", profilesRouter);
 server.use("/profile", experiencesRouter);
 server.use("/posts", postsRouter);
+server.use("/posts", likesRouter);
 server.use("/comments", commentsRouter);
 
 // ************** ERROR HANDLING *****************
