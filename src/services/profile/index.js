@@ -17,7 +17,80 @@ profilesRouter.post("/", async (req, res, next) => {
     console.log(error);
   }
 });
+///**********************GET ALL PROFILE
+profilesRouter.get("/", async (req, res, next) => {
+  try {
+    const mongoQuery = q2m(req.query);
+    const { total, profile } = await ProfileSchema.findProfileByUserName(
+      mongoQuery
+    );
 
+    //const profile = await ProfileSchema.find({});
+    res.send({
+      links: mongoQuery.links("/profile", total),
+      pageTotal: Math.ceil(total / mongoQuery.options.limit),
+      total,
+      profile,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 
+//************************* GET PROFILE BY _id
+
+profilesRouter.get("/:id", async (req, res, next) => {
+  try {
+    const profile = await ProfileSchema.findById(req.params.id);
+    if (!profile) {
+      res
+        .status(404)
+        .send({ message: `profile with ${req.params.id} is not found` });
+    } else {
+      res.send(profile);
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+//**************************** DELETE PROFILE */
+profilesRouter.delete("/:id", async (req, res, next) => {
+  try {
+    const profile = await ProfileSchema.findById(req.params.id);
+    if (!profile) {
+      res
+        .status(404)
+        .send({ message: `profile with ${req.params.id} not found` });
+    } else {
+      await ProfileSchema.findByIdAndDelete(req.params.id);
+      res.status(204).send();
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+///******************************* UPDATE PROFILE */
+
+profilesRouter.put("/:id", async (req, res, next) => {
+  try {
+    const profile = await ProfileSchema.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    res.send(profile);
+  } catch (error) {
+    next(error);
+  }
+});
+
+//****************************************FOR CSV FILE */
+
+/*profilesRouter.post(
+  "/:profileId/picture",
+  uploadOnCloudinary.single("image"),
+  async (req, res, next) => {}
+);*/
 
 export default profilesRouter;
