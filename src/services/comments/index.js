@@ -22,12 +22,11 @@ commentsRouter.post("/:postId/comments", async (req, res, next) => {
 
 // **************** GET ALL COMMENTS ****************
 commentsRouter.get("/:postId/comments", async (req, res, next) => {
-
   try {
-    const comments = await CommentSchema.find({ postId: req.params.postId })
-    res.json(comments)
+    const comments = await CommentSchema.find({ postId: req.params.postId });
+    res.json(comments);
   } catch (error) {
-    next(createError(500, error))
+    next(createError(500, error));
   }
 
   // try {
@@ -62,53 +61,72 @@ commentsRouter.get("/:commentId", async (req, res, next) => {
 });
 
 // *************** EDIT A COMMENT ***************
-commentsRouter.put("/:commentId/edit", async (req, res, next) => {
+commentsRouter.put("/:postId/comments/:commentsId", async (req, res, next) => {
   try {
-    const commentId = req.params.commentId;
-
     const updatedComment = await CommentSchema.findByIdAndUpdate(
-      commentId,
-      req.body,
-      {
-        new: true,
-        runValidators: true,
-      }
+      req.params.commentsId,
+      { comment: req.body.comment }
     );
-    if (updatedComment) {
-      res.status(204).send(updatedComment);
-    } else {
-      next(createError(404, `post with id ${postId} was not found`));
-    }
-  } catch (err) {
-    next(createError(500, "Error occurred while updating the post"));
+    if (!updatedComment)
+      return next(
+        createError(404, `Comment with id ${req.params.commentsId} not found`)
+      );
+    res.json(updatedComment);
+  } catch (error) {
+    next(createError(500, error));
   }
+
+  // try {
+  //   const commentId = req.params.commentId;
+
+  //   const updatedComment = await CommentSchema.findByIdAndUpdate(
+  //     commentId,
+  //     req.body,
+  //     {
+  //       new: true,
+  //       runValidators: true,
+  //     }
+  //   );
+  //   if (updatedComment) {
+  //     res.status(204).send(updatedComment);
+  //   } else {
+  //     next(createError(404, `post with id ${postId} was not found`));
+  //   }
+  // } catch (err) {
+  //   next(createError(500, "Error occurred while updating the post"));
+  // }
 });
 
 // ******************* DELETE COMMENTS *******************
-commentsRouter.delete("/:postId/comments/:commentId", async (req, res, next) => {
+commentsRouter.delete(
+  "/:postId/comments/:commentId",
+  async (req, res, next) => {
+    try {
+      const resp = await CommentSchema.findByIdAndDelete(req.params.commentId);
+      if (!resp)
+        return next(
+          createError(404, `Comment with id ${req.params.commentId} not found`)
+        );
+      res.json({ ok: true, message: "User deleted successfully" });
+    } catch (error) {
+      next(createError(500, error));
+    }
 
-  try {
-    const resp = await CommentSchema.findByIdAndDelete(req.params.commentId)
-    if (!resp) return next(createError(404, `Comment with id ${req.params.commentId} not found`))
-    res.json({ ok: true, message: "User deleted successfully" })
-  } catch (error) {
-    next(createError(500, error))
+    //   try {
+    //     const postId = req.params.postId;
+    //     const commentId = req.params.commentId;
+    //     const post = await PostModel.findById(postId);
+    //     const comment = await CommentModel.findById(commentId);
+    //     if (post && comment) {
+    //       await CommentModel.findByIdAndDelete(commentId);
+    //       res.status(204).send(`deleted`);
+    //     } else {
+    //       next(createError(404, `An Error ocurred while deleting your comment`));
+    //     }
+    //   } catch (err) {
+    //     next(createError(500, "Error occurred while deleting the post"));
+    //   }
   }
-
-//   try {
-//     const postId = req.params.postId;
-//     const commentId = req.params.commentId;
-//     const post = await PostModel.findById(postId);
-//     const comment = await CommentModel.findById(commentId);
-//     if (post && comment) {
-//       await CommentModel.findByIdAndDelete(commentId);
-//       res.status(204).send(`deleted`);
-//     } else {
-//       next(createError(404, `An Error ocurred while deleting your comment`));
-//     }
-//   } catch (err) {
-//     next(createError(500, "Error occurred while deleting the post"));
-//   }
-});
+);
 
 export default commentsRouter;
