@@ -70,6 +70,7 @@ async function toCSV(req,res,next) {
 // ******* USER EXPERIENCE BY ID *****
 async function getById(req, res, next) {
   try {
+    console.log(req.params.expId);
     const userExperience = await ExperienceSchema.findById(req.params.expId, {
       createdAt: 0,
       updatedAt: 0,

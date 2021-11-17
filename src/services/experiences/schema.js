@@ -6,7 +6,6 @@ const { Schema, model } = mongoose;
 
 const ExperienceSchema = new Schema(
   {
-    _id: {csv: false},
     role: { type: String, required: true },
     company: { type: String, required: true },
     startDate: { type: Date, required: true },
