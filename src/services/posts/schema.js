@@ -6,7 +6,8 @@ const PostSchema = new Schema({
   text: { type: String, required: true },
   username: {
     type: String,
-    required: [true, "Please add the name of user"],
+    required: [false, "Please add the name of user"],
+    //true when we use without /:username endpoint
   },
   user: {
     type: Schema.Types.ObjectId,

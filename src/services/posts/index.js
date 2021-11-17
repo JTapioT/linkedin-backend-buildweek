@@ -3,6 +3,8 @@ import express from "express";
 import createHttpError from "http-errors";
 import q2m from "query-to-mongo";
 import PostsSchema from "../posts/schema.js";
+import ProfileSchema from "../profile/schema.js";
+import { uploadPostPicture } from "../../utils/imageUpload.js";
 
 const postsRouter = express.Router();
 
@@ -54,6 +56,27 @@ postsRouter.get("/", async (req, res, next) => {
   }
 });
 
+//*********POSTING WITH USERNAME FOR CREATING A NEW POST ***** */
+postsRouter.post("/:username", async (req, res, next) => {
+  try {
+    const username = req.params.username;
+    console.log("here is username", username);
+    const user = await ProfileSchema.findOne({ username: username });
+    console.log("here is user", user);
+    const newPost = await PostsSchema(req.body);
+    newPost.user = user._id;
+    console.log("here is newpost", newPost);
+    newPost.save();
+    if (newPost) {
+      res.status(201).send(newPost);
+    } else {
+      next(createHttpError(404, `unable to post`));
+    }
+  } catch (err) {
+    next(createHttpError(500, "Error occurred while creating new post"));
+  }
+});
+
 postsRouter.get("/:postId", async (req, res, next) => {
   try {
     const id = req.params.postId;
@@ -70,6 +93,36 @@ postsRouter.get("/:postId", async (req, res, next) => {
     next(error);
   }
 });
+
+/************* POST with Image ******* */
+postsRouter.post(
+  "/:postId/uploadPic",
+  uploadPostPicture,
+  async (req, res, next) => {
+    try {
+      console.log(req.file.path);
+      const editedPost = await PostsSchema.findByIdAndUpdate(
+        { _id: req.params.postId },
+        { image: req.file.path },
+        { new: true }
+      );
+
+      if (editedPost) {
+        res.send({ message: "Image updated successfully.", editedPost });
+      } else {
+        next(
+          createHttpError(
+            404,
+            `No experience found with id: ${req.params.postId}`
+          )
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
+);
 
 postsRouter.put("/:postId", async (req, res, next) => {
   try {
