@@ -23,7 +23,7 @@ likesRouter.post("/:postId/like", async (req, res, next) => {
       );
     // If it's not liked, we need to add the likers
     else
-      updatedPost = await PostModel.findByIdAndUpdate(
+      updatedPost = await PostSchema.findByIdAndUpdate(
         req.params.postId,
         { $push: { likes: userId } },
         { new: true }
