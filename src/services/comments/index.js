@@ -7,7 +7,7 @@ import PostSchema from "../posts/schema.js";
 const commentsRouter = express.Router();
 
 // **************** POST A NEW COMMENT ****************
-commentsRouter.post("/:postId/comment", async (req, res, next) => {
+commentsRouter.post("/:postId/comments", async (req, res, next) => {
   {
     const postId = req.params.postId;
     const newComment = new CommentSchema({ ...req.body, postId });
@@ -85,21 +85,30 @@ commentsRouter.put("/:commentId/edit", async (req, res, next) => {
 });
 
 // ******************* DELETE COMMENTS *******************
-commentsRouter.delete("/:postId/:commentId/delete", async (req, res, next) => {
+commentsRouter.delete("/:postId/comments/:commentId", async (req, res, next) => {
+
   try {
-    const postId = req.params.postId;
-    const commentId = req.params.commentId;
-    const post = await PostModel.findById(postId);
-    const comment = await CommentModel.findById(commentId);
-    if (post && comment) {
-      await CommentModel.findByIdAndDelete(commentId);
-      res.status(204).send(`deleted`);
-    } else {
-      next(createError(404, `An Error ocurred while deleting your comment`));
-    }
-  } catch (err) {
-    next(createError(500, "Error occurred while deleting the post"));
+    const resp = await CommentSchema.findByIdAndDelete(req.params.commentId)
+    if (!resp) return next(createError(404, `Comment with id ${req.params.commentId} not found`))
+    res.json({ ok: true, message: "User deleted successfully" })
+  } catch (error) {
+    next(createError(500, error))
   }
+
+//   try {
+//     const postId = req.params.postId;
+//     const commentId = req.params.commentId;
+//     const post = await PostModel.findById(postId);
+//     const comment = await CommentModel.findById(commentId);
+//     if (post && comment) {
+//       await CommentModel.findByIdAndDelete(commentId);
+//       res.status(204).send(`deleted`);
+//     } else {
+//       next(createError(404, `An Error ocurred while deleting your comment`));
+//     }
+//   } catch (err) {
+//     next(createError(500, "Error occurred while deleting the post"));
+//   }
 });
 
 export default commentsRouter;
