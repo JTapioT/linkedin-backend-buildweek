@@ -57,16 +57,16 @@ postsRouter.get("/", async (req, res, next) => {
 });
 
 //*********POSTING WITH USERNAME FOR CREATING A NEW POST ***** */
-postsRouter.post("/:username", async (req, res, next) => {
+postsRouter.post("/:userId", async (req, res, next) => {
   try {
-    const username = req.params.username;
-    console.log("here is username", username);
-    const user = await ProfileSchema.findOne({ username: username });
-    console.log("here is user", user);
-    const newPost = await PostsSchema(req.body);
-    newPost.user = user._id;
-    console.log("here is newpost", newPost);
-    newPost.save();
+    const userId = req.params.userId;
+    console.log("here is user", userId);
+    const user = await ProfileSchema.findOne({ _id: userId });
+
+    const newPost = new PostsSchema({ ...req.body, user: userId });
+    //newPost.user = user._id;
+
+    await newPost.save();
     if (newPost) {
       res.status(201).send(newPost);
     } else {
