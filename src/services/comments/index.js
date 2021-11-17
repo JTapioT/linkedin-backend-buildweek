@@ -46,7 +46,7 @@ commentsRouter.get("/:postId/comments", async (req, res, next) => {
 });
 
 // **************** GET SINGLE COMMENT ****************
-commentsRouter.get("/:commentId", async (req, res, next) => {
+commentsRouter.get("/:postId/comments/:commentId", async (req, res, next) => {
   try {
     const commentId = req.params.commentId;
     const comment = await CommentSchema.findById(commentId);
