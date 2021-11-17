@@ -61,8 +61,8 @@ postsRouter.post("/:userId", async (req, res, next) => {
   try {
     const userId = req.params.userId;
     console.log("here is user", userId);
-    const user = await ProfileSchema.findOne({ _id: userId });
-
+    // const user = await ProfileSchema.findOne({ _id: userId });
+    console.log({ ...req.body, user: userId });
     const newPost = new PostsSchema({ ...req.body, user: userId });
     //newPost.user = user._id;
 
