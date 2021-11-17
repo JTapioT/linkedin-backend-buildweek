@@ -8,66 +8,69 @@ const ProfileSchema = new Schema(
   {
     name: {
       type: String,
-      required: true,
-      validate: {
-        validator: (value) => {
-          if (!validation.isLength(value, { min: 2 })) {
-            throw new Error("Name should be at least 2 characters long!");
-          }
-        },
-      },
+      // required: true,
+      // validate: {
+      //   validator: (value) => {
+      //     if (!validation.isLength(value, { min: 2 })) {
+      //       throw new Error("Name should be at least 2 characters long!");
+      //     }
+      //   },
+      // },
     },
     surname: {
       type: String,
-      required: true,
-      validate: {
-        validator: (value) => {
-          if (!validation.isLength(value, { min: 2 })) {
-            throw new Error("Surname should be at least 2 characters long!");
-          }
-        },
-      },
+      // required: true,
+      // validate: {
+      //   validator: (value) => {
+      //     if (!validation.isLength(value, { min: 2 })) {
+      //       throw new Error("Surname should be at least 2 characters long!");
+      //     }
+      //   },
+      // },
     },
     email: {
       type: String,
       required: true,
-      validate: {
-        validator: async (value) => {
-          if (!validation.isEmail(value)) {
-            throw new Error("Email is invalid");
-          } else {
-            const checkEmail = await ProfileModel.findOne({ email: value });
-            if (checkEmail) {
-              throw new Error("Email already existsts");
-            }
-          }
-        },
-      },
+      unique: true
+      // validate: {
+      //   validator: async (value) => {
+      //     if (!validation.isEmail(value)) {
+      //       throw new Error("Email is invalid");
+      //     } else {
+      //       const checkEmail = await ProfileModel.findOne({ email: value });
+      //       if (checkEmail) {
+      //         throw new Error("Email already existsts");
+      //       }
+      //     }
+      //   },
+      // },
     },
     username: {
       type: String,
       required: true,
-      validate: {
-        validator: async (value) => {
-          const checkUsername = await ProfileModel.findOne({ username: value });
-          if (checkUsername) {
-            throw new Error("Username already exists!");
-          }
-        },
-      },
+      unique: true
+      // validate: {
+      //   validator: async (value) => {
+      //     const checkUsername = await ProfileModel.findOne({ username: value });
+      //     if (checkUsername) {
+      //       throw new Error("Username already exists!");
+      //     }
+      //   },
+      // },
     },
+    isAdmin: {type: Boolean, default: false},
     password: {
       type: String,
+      unique: true
     },
     token: {
       type: String,
     },
-    bio: { type: String, required: true },
-    title: { type: String, required: true },
-    area: { type: String, required: true },
+    bio: { type: String},
+    title: { type: String},
+    area: { type: String},
     image: {
       type: String,
-      required: true,
       default: function () {
         return `https://eu.ui-avatars.com/api/?name=${this.name}+${this.surname}`;
       },
@@ -145,3 +148,16 @@ ProfileSchema.static("findProfileByUserName", async function (query) {
 });
 
 export default model("Profile", ProfileSchema);
+
+// const ProfileSchema = new mongoose.Schema(
+//   {
+//     username: { type: String, required: true, unique: true },
+//     email: { type: String, required: true, unique: true },
+//     password: { type: String, required: true },
+//     profilePic: { type: String, defaut: "" },
+//     isAdmin: { type: Boolean, default: false },
+//   },
+//   { timestamps: true }
+// );
+
+// export default mongoose.model("User", ProfileSchema);

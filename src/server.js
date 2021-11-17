@@ -14,6 +14,7 @@ import postsRouter from "../src/services/posts/index.js";
 import experiencesRouter from "../src/services/experiences/index.js"
 import commentsRouter from "../src/services/comments/index.js";
 import likesRouter from "../src/services/likes/index.js";
+import authRouter from "../src/services/auth/auth.js"
 
 
 //dotenv.config();
@@ -31,6 +32,7 @@ server.use("/profile", experiencesRouter);
 server.use("/posts", postsRouter);
 server.use("/posts", likesRouter);
 server.use("/comments", commentsRouter);
+server.use("/auth", authRouter);
 
 // ************** ERROR HANDLING *****************
 server.use(notFoundHandler);
