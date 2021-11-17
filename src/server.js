@@ -31,7 +31,7 @@ server.use("/profile", profilesRouter);
 server.use("/profile", experiencesRouter);
 server.use("/posts", postsRouter);
 server.use("/posts", likesRouter);
-server.use("/comments", commentsRouter);
+server.use("/posts", commentsRouter);
 server.use("/auth", authRouter);
 
 // ************** ERROR HANDLING *****************
