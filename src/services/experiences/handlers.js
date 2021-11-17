@@ -14,7 +14,7 @@ async function getAll(req, res, next) {
     const mongoQuery = q2m(req.query);
 
     const total = await ExperienceSchema.countDocuments({
-      username: req.params.userName,
+      userName: req.params.userName,
     });
 
     const userExperiences = await ExperienceSchema.find({
@@ -52,11 +52,14 @@ async function toCSV(req,res,next) {
     
     res.setHeader("Content-Disposition", `attachment; filename=${req.params.userName}Experiences.csv`)
     
-    ExperienceSchema.find({userName: req.params.userName},{
-        _id: false, 
-        createdAt: 0, 
+    ExperienceSchema.find(
+      { userName: req.params.userName },
+      {
+        _id: false,
+        createdAt: 0,
         updatedAt: 0,
-    }).csv(res);
+      }
+    ).csv(res);
   
   } catch (error) {
     console.log(error);
@@ -102,7 +105,7 @@ async function newExperience(req, res, next) {
 }
 
 // ****** POST IMG FOR EXPERIENCE ***
-async function updateImage(req,res,next) {
+async function updateImageUrl(req,res,next) {
   try {
 
     const editedExperience = await ExperienceSchema.findByIdAndUpdate(
@@ -152,5 +155,5 @@ async function deleteExperience(req, res, next) {
 }
 
 export default {
-  getAll, toCSV, getById, newExperience, updateExperience, updateImage, deleteExperience
+  getAll, toCSV, getById, newExperience, updateExperience, updateImageUrl, deleteExperience
 }
