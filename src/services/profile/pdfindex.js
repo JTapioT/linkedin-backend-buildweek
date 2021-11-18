@@ -24,17 +24,38 @@ export const generateProfilePDF = async (profile) => {
     const [id, extension] = filename.split(".");
     const base64 = response.data.toString("base64");
     const base64Image = `data:image/${extension};base64,${base64}`;
-    imagePart = { image: base64Image, width: 500, margin: [0, 0, 0, 40] };
+    imagePart = { image: base64Image, width: 200, margin: [0, 0, 0, 40] };
   }
   const docDefinition = {
+    header: {
+      text: "Profile",
+      alignment: "center",
+      margin: [0, 10, 0, 0],
+    },
+    footer: {
+      text: profile.email,
+      alignment: `center`,
+    },
+    watermark: {
+      text: "Profile",
+      color: "blue",
+      opacity: 0.1,
+      bold: true,
+      italics: false,
+    },
     content: [
       imagePart,
       {
-        text: [
-          { text: profile.name },
-          { text: profile.surname },
-          { text: profile.email },
+        ul: [
+          { margin: [5, 10, 5, 20], text: profile.name },
+          { margin: [5, 10, 5, 20], text: profile.surname },
+          { margin: [5, 10, 5, 20], text: profile.email },
+          { margin: [5, 10, 5, 20], text: profile.username },
+          { margin: [5, 10, 5, 20], text: profile.bio },
+          { margin: [5, 10, 5, 20], text: profile.title },
+          { margin: [5, 10, 5, 20], text: profile.area },
         ],
+        margin: [5, 2, 10, 20],
         fontSize: 20,
         bold: true,
         margin: [0, 0, 0, 40],

@@ -5,6 +5,7 @@ import q2m from "query-to-mongo";
 import ProfileSchema from "../profile/schema.js";
 import { generateProfilePDF } from "./pdfindex.js";
 import { pipeline } from "stream";
+import { uploadProfilePicture } from "../../utils/imageUpload.js";
 
 const profilesRouter = express.Router();
 
@@ -19,6 +20,28 @@ profilesRouter.post("/", async (req, res, next) => {
     console.log(error);
   }
 });
+
+//********************* UPLOAD IMAGE */
+profilesRouter.post(
+  "/:id/picture",
+  uploadProfilePicture,
+  async (req, res, next) => {
+    try {
+      const uploadPicture = await ProfileSchema.findByIdAndUpdate(
+        { _id: req.params.id },
+        { image: req.file.path },
+        { new: true }
+      );
+      if (uploadPicture) {
+        res.send("image uploaded");
+      } else {
+        next(createHttpError(404, `profile id not found`));
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 ///**********************GET ALL PROFILE
 profilesRouter.get("/", async (req, res, next) => {
   try {
