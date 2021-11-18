@@ -100,6 +100,7 @@ postsRouter.get("/:postId", async (req, res, next) => {
     const post = await PostsSchema.findById(id).populate({
       path: "user",
     });
+    /*     .populate({ path: "comments" }); */
     if (post) {
       res.send(post);
     } else {
