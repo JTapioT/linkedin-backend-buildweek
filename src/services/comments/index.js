@@ -23,7 +23,9 @@ commentsRouter.post("/:postId/comments", async (req, res, next) => {
 // **************** GET ALL COMMENTS ****************
 commentsRouter.get("/:postId/comments", async (req, res, next) => {
   try {
-    const comments = await CommentSchema.find({ postId: req.params.postId });
+    const comments = await CommentSchema.find({
+      postId: req.params.postId,
+    }).populate({ path: "userId", select: "image surname name title" });
     res.json(comments);
   } catch (error) {
     next(createError(500, error));

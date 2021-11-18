@@ -77,6 +77,22 @@ postsRouter.post("/:userId", async (req, res, next) => {
   }
 });
 
+//*****GET BY USERID */
+postsRouter.get("/:userId", async (req, res, next) => {
+  try {
+    const id = req.params.userId;
+
+    const post = await PostsSchema.findById(id).populate();
+    if (post) {
+      res.send(post);
+    } else {
+      next(createHttpError(404, `User with id ${id} not found!`));
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
 postsRouter.get("/:postId", async (req, res, next) => {
   try {
     const id = req.params.postId;
