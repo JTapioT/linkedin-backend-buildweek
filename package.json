@@ -29,6 +29,7 @@
     "multer-storage-cloudinary": "^4.0.0",
     "pdfmake": "^0.2.4",
     "query-to-mongo": "^0.10.1",
+    "react-icons": "^4.3.1",
     "striptags": "^3.2.0",
     "validator": "^13.7.0"
   },
