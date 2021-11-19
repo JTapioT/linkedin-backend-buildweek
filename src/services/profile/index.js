@@ -6,11 +6,15 @@ import ProfileSchema from "../profile/schema.js";
 import { generateProfilePDF } from "./pdfindex.js";
 import { pipeline } from "stream";
 import { uploadProfilePicture } from "../../utils/imageUpload.js";
+// import bcrypt from "bcrypt"
+// import q2m from "query-to-mongo"
 
 const profilesRouter = express.Router();
 
 // *************** CREATE A NEW PROFILE
 profilesRouter.post("/", async (req, res, next) => {
+   // const hashedPass = await bcrypt.hash(req.body.password, 10)
+  // req.body.password = hashedPass
   try {
     const newProfile = new ProfileSchema(req.body);
     const { _id } = await newProfile.save();
@@ -98,6 +102,10 @@ profilesRouter.delete("/:id", async (req, res, next) => {
 ///******************************* UPDATE PROFILE */
 
 profilesRouter.put("/:id", async (req, res, next) => {
+    // if (req.body.password) {
+  //   const hashedPass = await bcrypt.hash(req.body.password, 10)
+  //   update.password = hashedPass
+  // }
   try {
     const profile = await ProfileSchema.findByIdAndUpdate(
       req.params.id,
